@@ -1,35 +1,93 @@
-# Super Intelligence — MYRAA RC8 Screen Companion
+<div align="center">
 
-MYRAA is an Android AI assistant built with Java, TypeScript and a WebView, using Gemini for conversation and approved screenshot analysis. The repository also retains the existing Windows application source.
+# MYRAA
 
-**RC8 is a development/test candidate. Real-device MediaProjection behavior and authenticated Gemini vision/Live requests remain unverified.** See [the verification report](docs/ANDROID-RC8-VERIFICATION.md) for evidence and limitations.
+### Your AI companion. On your phone.
 
-## Android features
+Voice conversations, everyday phone tasks, and screen guidance you choose to share.
 
-- User-initiated MediaProjection screen capture with foreground notification and Stop controls.
-- Per-image preview and explicit approval before sending an image to Gemini.
-- Screen explanation, error guidance, translation, form explanation and tutorial prompts.
-- Existing Gemini Live voice, wake-listening controls, Android actions and task engine.
-- Memory-only screenshots and cancellation of obsolete visual requests.
+**[↓ Download Android APK](https://github.com/ismailarainisc/Super-Intelligence-/raw/refs/heads/main/releases/rc8/MYRAA-Mobile-RC8-test.apk)** &nbsp; · &nbsp; **[Get the source](https://github.com/ismailarainisc/Super-Intelligence-/archive/refs/heads/main.zip)** &nbsp; · &nbsp; **[RC8 release](https://github.com/ismailarainisc/Super-Intelligence-/releases/tag/v1.0.0-rc.8)**
 
-Optional local OCR is not bundled. Direct Gemini Live video input is not enabled; approved images use the configured image-understanding request path. The source archive has no third-party character assets, so this build uses a neutral avatar fallback.
+Android 8+ · Gemini · Java + TypeScript · Open source
 
-## Build Android
+</div>
 
-Requires Node/npm, JDK 21, Android SDK platform 35 and build-tools 35.0.0. Android minimum API is 26 (Android 8.0).
+<table>
+<tr>
+<td align="center" width="50%"><img src="docs/images/myraa-home.png" width="310" alt="MYRAA home screen with its neutral source-build avatar, conversation controls and Screen Companion entry"><br><b>Meet MYRAA</b></td>
+<td align="center" width="50%"><img src="docs/images/myraa-screen-companion.png" width="310" alt="Screen Companion workspace with sharing controls, privacy review and guidance features"><br><b>Understand your screen</b></td>
+</tr>
+</table>
+
+<sub>Actual RC8 browser UI previews. This source build uses a neutral avatar; private 3D character assets are separate. [Preview details](docs/images/README.md)</sub>
+
+### Talk. Get things done. Stay in control.
+
+- **Natural voice** — Gemini Live conversations and optional “Hey MYRAA” listening.
+- **Everyday tasks** — open apps, search, prepare WhatsApp drafts, and open Clock or Calendar setup.
+- **Screen guidance** — ask about errors, translate text, or request the next step after reviewing a screenshot.
+- **Your choice** — explicit sharing consent, per-image upload approval, and visible Stop controls.
+
+### Try it in three steps
+
+1. **[Download the test APK](https://github.com/ismailarainisc/Super-Intelligence-/raw/refs/heads/main/releases/rc8/MYRAA-Mobile-RC8-test.apk)** and install it on a compatible Android phone.
+2. Open **Settings**, enter your own Gemini API key, select models available to your account, and tap **Check key & model**.
+3. Tap **Talk**, type a task, or open **Screen Companion**. Review each screenshot before sending it to Gemini.
+
+<details>
+<summary>See the Settings screen</summary>
+
+<img src="docs/images/myraa-settings.png" width="310" alt="MYRAA settings showing the empty Gemini key field, model selection, language and graphics options">
+
+</details>
+
+**RC8 is a test candidate.** Real-device capture and authenticated Gemini verification remain pending. OCR and direct Live video input are not included. [Verification & limitations →](docs/ANDROID-RC8-VERIFICATION.md)
+
+<details>
+<summary><b>Run from source</b></summary>
+
+Install **Node.js/npm, JDK 21, Android SDK platform 35 and build-tools 35.0.0**. Windows also needs **PowerShell 7**.
 
 ```bash
+git clone https://github.com/ismailarainisc/Super-Intelligence-.git
+cd Super-Intelligence-
 npm ci
+```
+
+**Linux / macOS**
+
+```bash
 export JAVA_HOME=/path/to/jdk-21
 export ANDROID_HOME=/path/to/android-sdk
 bash scripts/build-android.sh
 ```
 
-On Windows, use `scripts/build-android.ps1` with its SDK/JDK parameters. Enter your own Gemini key in the app's Settings; do not commit it or put it into chat.
+APK: `artifacts/android/MYRAA-Mobile-1.0.0-rc.8-source-test.apk`
 
-The test APK is development-signed. To update an existing differently signed MYRAA installation while preserving its data, rebuild using its original signing identity. Do not uninstall an existing app merely to install this test build.
+**Windows — PowerShell**
 
-## Verification
+```powershell
+$env:JAVA_HOME = 'C:\path\to\jdk-21'
+$env:ANDROID_HOME = 'C:\path\to\android-sdk'
+npm run build:android
+```
+
+APK: `artifacts/android/MYRAA-Mobile-1.0.0-rc.8-private.apk`
+
+**Browser UI preview**
+
+```bash
+npx vite --host 127.0.0.1 --port 5178
+```
+
+Open `http://127.0.0.1:5178/mobile.html`. Native voice, phone actions and screen capture require the Android app. Without private model assets, the browser-only preview may report missing character assets.
+
+</details>
+
+<details>
+<summary><b>Updating an existing install · tests · project details</b></summary>
+
+The downloadable APK is development-signed. To preserve data when updating a differently signed installation, rebuild with its **original signing identity**. Do not uninstall an existing MYRAA app just to install this test build.
 
 ```bash
 npm test
@@ -37,123 +95,16 @@ bash scripts/test-android-native.sh
 bash scripts/test-screen-companion.sh
 ```
 
-Browser suites under `tests/` use explicitly identified native/provider fixtures. They are not evidence of real Android capture or authenticated Gemini compatibility.
+The native test scripts require the SDK/JDK environment variables above. Browser checks use explicitly identified fixtures; screenshots are not proof of Android capture or Gemini connectivity.
 
-Source licensing is in [LICENSE](LICENSE); third-party assets have separate rights described in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+[Verification report](docs/ANDROID-RC8-VERIFICATION.md) · [Downloads & checksums](releases/rc8) · [Android task guide](docs/ANDROID-RC6-TASKS.md) · [OCR status](docs/ANDROID-RC8-OCR.md)
 
----
+</details>
 
-## Earlier project documentation
+<div align="center">
 
-# MYRAA V2 — Windows and Android development candidate
+Bring your own Gemini key. Keep credentials and signing keys private.
 
-Android task-assistant upgrade: [RC6 usage and build](docs/ANDROID-RC6-TASKS.md), [verification and limitations](docs/ANDROID-RC6-VERIFICATION.md).
+[MIT source license](LICENSE) · [Third-party asset rights](THIRD-PARTY-NOTICES.md)
 
-MYRAA is a desktop AI assistant with a modular real-time 3D anime character system.
-
-Current autonomous development status: [MYRAA-V2-PROGRESS.md](MYRAA-V2-PROGRESS.md),
-[test ledger](MYRAA-V2-TEST-REPORT.md), and [release gates](MYRAA-V2-RELEASE-CHECKLIST.md).
-The former 48-hour deadline is removed. See [Google key troubleshooting](docs/GOOGLE-KEY-TROUBLESHOOTING.md)
-for the RC2 authentication/credential-redaction repair.
-
-The existing Electron/React/Three.js application is preserved. Android uses the
-same PMX character runtime with native lifecycle, provider networking, Keystore,
-speech recognition and TTS, and operates without a Windows PC.
-
-See [V2 build instructions](docs/V2-BUILD.md), [test and release status](docs/V2-TEST-REPORT.md),
-[model inventory](docs/V2-MODELS.md), [changes](docs/V2-RELEASE-NOTES.md),
-and [Android source/build](android/README.md). Release candidates are not labelled
-production-ready. Third-party character assets require separate redistribution rights.
-
-## Workspace contract
-
-The repository is intentionally split into two top-level areas:
-
-```text
-MYRAA TO 3D/
-├── myraa-ai-assistant/   Application and runtime-ready character assets
-└── MYRAA 3d MODELS/     Raw source models and their original textures
-```
-
-Keep raw PMX files and original packages in `MYRAA 3d MODELS`. Original assets
-are never overwritten. Additional characters are imported into the user's local
-library under `%APPDATA%/MYRAA/characters` and resolved from their rig profiles.
-Use `npm run audit:models` to discover every source model, including archive
-variants and props; do not assume a fixed count. The V2 audit discovered 12
-humanoid variants and seven distinct props across the supplied packages.
-
-## Character controls
-
-| Control | Action |
-| --- | --- |
-| `W A S D` | Smooth free camera orbit, including side and back views |
-| `Q / E` | Zoom out / in |
-| `L` | Lock or unlock the current view |
-| `F` | Toggle eyes following the mouse |
-| `R` | Reset the camera to the default front view |
-| `1` | Front preset |
-| `2` | Three-quarter preset |
-| `3` | Side preset |
-| `4` | Back preset |
-
-The preview also exposes clickable **View lock**, **Eyes**, **Front**, **¾**, **Side**, and **Back** controls. While view lock is active, orbit, zoom, reset, and preset changes are intentionally blocked.
-
-## Character architecture
-
-The implementation under `src/character` is divided by responsibility:
-
-- `core`: stage, render loop, model lifecycle, camera and system orchestration
-- `loaders`: PMX parsing and staged texture resolution
-- `materials`: anime shading, toon ramps, outlines and ambient occlusion
-- `lighting`: body and camera-relative portrait lighting rigs
-- `animation`: layered pose, idle, gaze and grant solving
-- `face`: expressions, morphs, blinking and real-time lip sync
-- `behaviour`: random natural actions and activity-aware direction
-- `physics`: secondary motion for hair, clothing and accessories
-- `config/characters`: all model-specific bones, morphs, materials and tuning
-
-New characters should be added through configuration and staged assets rather than by hardcoding model details into the shared runtime.
-
-## Development
-
-Prerequisites: Node.js and npm.
-
-```powershell
-npm ci
-npm run dev
-```
-
-Open the standalone tuning harness at:
-
-`http://localhost:5178/character-preview.html`
-
-Use these checks before shipping character changes:
-
-```powershell
-npm run lint
-npm run build
-```
-
-Configure your own API key in MYRAA's AI settings to use protected storage.
-Development `.env` files are ignored and must never be committed. The clean
-source export omits third-party assets: set `VITE_MYRAA_PUBLIC=1` for development
-without a bundled character, or use `npm run dist:public` and import your own model.
-
-The backend also maintains an internal public-API capability registry sourced
-from `public-apis/public-apis`. See [`docs/API_HUB.md`](docs/API_HUB.md) for its
-cache, provider states, discovery endpoints, and code-free adapter boundary.
-
-## Cognitive runtime
-
-The event-driven cognitive backend extends the existing application without
-changing the UI or character system. Its architecture, safety boundaries,
-feature flags, storage files, APIs, tests, and phased roadmap are documented in
-[`docs/COGNITIVE_ARCHITECTURE.md`](docs/COGNITIVE_ARCHITECTURE.md).
-
-```powershell
-npm run test:cognition
-npm run test:api-hub
-npm run test:screen-vision
-npm run test:python
-npm run simulate:cognition
-```
+</div>
