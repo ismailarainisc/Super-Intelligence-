@@ -5,7 +5,7 @@ const fs = require('node:fs');
 (async()=>{
   const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','--autoplay-policy=no-user-gesture-required']});
   const page=await browser.newPage({viewport:{width:390,height:844},permissions:['microphone']});
-  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const errors=[];page.on('pageerror',e=>{errors.push(e.message);console.error('BROWSER ERROR:',e.stack||e.message);});
   const checks=[];const check=(label,ok)=>{assert.ok(ok,label);checks.push(label);console.log('PASS '+label);};
   try{
     await page.addInitScript(()=>{
@@ -23,9 +23,10 @@ const fs = require('node:fs');
         startLive:id=>{calls.push({type:'startLive'});setTimeout(()=>MyraaEvents({type:'live-token',id,token:'auth_tokens/test-only',model:'fixture-live',voice:'Aoede',instruction:'Fixture',backgroundLive:true}),10);},
         endLive:()=>calls.push({type:'endLive'}),
       };
+      const BrowserWebSocket=window.WebSocket;
       window.WebSocket=class{
         static OPEN=1;readyState=0;
-        constructor(){window.fixtureSocket=this;setTimeout(()=>{this.readyState=1;this.onopen?.({});},10);}
+        constructor(url,protocols){if(!String(url).includes('generativelanguage.googleapis.com'))return new BrowserWebSocket(url,protocols);window.fixtureSocket=this;setTimeout(()=>{this.readyState=1;this.onopen?.({});},10);}
         send(raw){const d=JSON.parse(raw);if(d.setup){window.setup=d.setup;setTimeout(()=>this.onmessage?.({data:JSON.stringify({setupComplete:{}})}),5);}if(d.realtimeInput?.audio)window.pcmCount=(window.pcmCount||0)+1;if(d.toolResponse)calls.push({type:'toolResponse',response:d.toolResponse});}
         close(){this.readyState=3;}
       };

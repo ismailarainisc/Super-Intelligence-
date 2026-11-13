@@ -13,6 +13,8 @@ $javaBin = Join-Path $JavaRoot 'bin'
 foreach ($required in @($androidJar, (Join-Path $toolsRoot 'aapt2.exe'), (Join-Path $javaBin 'javac.exe'))) { if (-not (Test-Path -LiteralPath $required)) { throw "Missing build prerequisite: $required" } }
 Set-Location -LiteralPath $projectRoot
 $env:JAVA_HOME = $JavaRoot
+& node.exe scripts/validate-mobile-assets.cjs
+if ($LASTEXITCODE -ne 0) { throw 'Character asset validation failed.' }
 & npm.cmd exec -- vite build --config vite.mobile.config.ts
 if ($LASTEXITCODE -ne 0) { throw 'Mobile asset build failed.' }
 $assetRoot = Join-Path $projectRoot 'android\app\src\main\assets'
@@ -38,7 +40,11 @@ if ($LASTEXITCODE -ne 0) { throw 'DEX compilation failed.' }
 $unsigned = Join-Path $buildRoot 'unsigned.apk'
 $resRoot = Join-Path $buildRoot 'res'
 New-Item -ItemType Directory -Path (Join-Path $resRoot 'drawable') -Force | Out-Null
-Copy-Item -LiteralPath 'build\icon.png' -Destination (Join-Path $resRoot 'drawable\myraa_icon.png')
+if (Test-Path -LiteralPath 'assets\branding\myraa_icon.png') {
+  Copy-Item -LiteralPath 'assets\branding\myraa_icon.png' -Destination (Join-Path $resRoot 'drawable\myraa_icon.png')
+} else {
+  Copy-Item -LiteralPath 'build\icon.png' -Destination (Join-Path $resRoot 'drawable\myraa_icon.png')
+}
 $compiledResources = Join-Path $buildRoot 'resources.zip'
 & (Join-Path $toolsRoot 'aapt2.exe') compile --dir $resRoot -o $compiledResources
 if ($LASTEXITCODE -ne 0) { throw 'Android icon resource compilation failed.' }
@@ -73,7 +79,8 @@ if (-not (Test-Path -LiteralPath $keyStore)) {
   if ($LASTEXITCODE -ne 0) { throw 'Local development signing key creation failed.' }
 }
 New-Item -ItemType Directory -Path 'artifacts\android' -Force | Out-Null
-$apk = Join-Path $projectRoot 'artifacts\android\MYRAA-Mobile-1.0.0-rc.8-private.apk'
+$variant = if (Test-Path -LiteralPath 'assets\characters\evelyn\model.pmx') { 'private-restored' } else { 'source-test' }
+$apk = Join-Path $projectRoot ('artifacts\android\MYRAA-Mobile-1.0.0-rc.8-' + $variant + '.apk')
 & (Join-Path $toolsRoot 'apksigner.bat') sign --ks $keyStore --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --out $apk $aligned
 if ($LASTEXITCODE -ne 0) { throw 'APK signing failed.' }
 & (Join-Path $toolsRoot 'apksigner.bat') verify --verbose $apk

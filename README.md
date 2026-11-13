@@ -72,7 +72,9 @@ $env:ANDROID_HOME = 'C:\path\to\android-sdk'
 npm run build:android
 ```
 
-APK: `artifacts/android/MYRAA-Mobile-1.0.0-rc.8-private.apk`
+APK: `artifacts/android/MYRAA-Mobile-1.0.0-rc.8-source-test.apk`
+
+**Have the original RC5 APK?** [Restore its 3D avatar and icon locally](docs/RC5-AVATAR-RESTORATION.md), keeping the RC8 features. Restored owner builds produce a `private-restored.apk`.
 
 **Browser UI preview**
 
