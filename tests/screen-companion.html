@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Screen Companion deterministic UI checks</title><body style="margin:0;background:#101317"><div class="footer-actions"></div><script type="module">
+import { mountScreenCompanion } from '/src/mobile/screenCompanion.ts';
+window.fixtureCalls = [];
+const call = (name,...args) => window.fixtureCalls.push({name,args});
+window.screenWorkspace = mountScreenCompanion({bridge:{
+ getScreenState:()=>JSON.stringify({state:'IDLE',hasProjection:false,sessionId:'',frameSequence:0}),
+ screenStart:mode=>call('start',mode),screenStop:()=>call('stop'),screenPause:value=>call('pause',value),screenReview:()=>call('review'),screenAnalyze:(...args)=>call('analyze',...args),screenDiscardReview:()=>call('discard'),screenSetOptions:json=>call('options',json),
+},onSpeakViaLive:(...args)=>{call('existingLive',...args);return false;}});
+window.syntheticScreen = () => {const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;const ctx=canvas.getContext('2d');ctx.fillStyle='#f1f4f8';ctx.fillRect(0,0,360,640);ctx.fillStyle='#152334';ctx.font='24px sans-serif';ctx.fillText('Synthetic settings fixture',20,60);ctx.fillStyle='#1768b5';ctx.fillRect(220,550,100,45);ctx.fillStyle='white';ctx.font='18px sans-serif';ctx.fillText('Save',250,580);return canvas.toDataURL('image/jpeg',0.65);};
+</script></body></html>
