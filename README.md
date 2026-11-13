@@ -1,4 +1,4 @@
-# MYRAA RC8 — Android Screen Companion
+# Super Intelligence — MYRAA RC8 Screen Companion
 
 MYRAA is an Android AI assistant built with Java, TypeScript and a WebView, using Gemini for conversation and approved screenshot analysis. The repository also retains the existing Windows application source.
 
